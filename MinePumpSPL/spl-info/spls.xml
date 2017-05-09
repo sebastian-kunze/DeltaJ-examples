@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../bin/spls.xsd">
+	<spl name="MinePumpSPL">
+		<features>
+			<feature name ="Core" />
+			<feature name ="HighWater" />
+			<feature name ="LowWater" />
+			<feature name ="Methane" />
+		</features>
+		<configurations>
+		</configurations>
+		<deltas>
+			<partition>
+				<modul delta="dEnvironment" when="Core" />
+				<modul delta="dMinePump" when="Core" />
+			</partition>
+			<partition>
+				<modul delta="dHighWater" when="HighWater" />
+			</partition>
+			<partition>
+				<modul delta="dLowWater" when="LowWater" />
+			</partition>
+			<partition>
+				<modul delta="dMethane" when="Methane" />
+			</partition>
+		</deltas>
+	</spl>
+</spls>

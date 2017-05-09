@@ -1,0 +1,31 @@
+delta dLowWater {
+	modifies se.hh.ceres.MinePump {
+
+		adds boolean isLowWaterLevel() {
+			if (environment.isLowWaterSensorDry()) {
+				return false;	
+			} else {
+				return true;
+			}
+		}
+
+		modifies processEnvironment() {
+			if(pumpRunning && isLowWaterLevel()) {
+				deactivatePump();
+				original();
+			} else {
+				original();
+			}
+		}
+	}
+
+	modifies se.hh.ceres.Environment {
+		adds public boolean isLowWaterSensorDry() {
+			if (waterLevel != WATER_LEVEL_LOW) {
+				return true;	
+			} else {
+				return false;
+			}
+		}
+	}
+}

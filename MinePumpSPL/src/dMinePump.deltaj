@@ -1,0 +1,60 @@
+delta dMinePump {
+	adds {
+		package se.hh.ceres;
+
+		public class MinePump {
+
+			public boolean pumpRunning = false;
+
+			public boolean systemActive = true;
+
+			private Environment environment;
+
+			public MinePump(Environment environment) {
+				this.environment = environment;
+			}
+			
+			public boolean isPumpRunning() {
+				return pumpRunning;
+			}
+			
+			public boolean isSystemActive() {
+				return systemActive;
+			}
+
+			public void timeShift() {
+				if(systemActive) {
+					processEnvironment();
+				}
+
+				if(pumpRunning) {
+					environment.lowerWaterLevel();	
+				}
+			}
+
+			void processEnvironment() {
+				
+			}
+
+			public void activatePump() {
+				pumpRunning = true;
+			}
+
+			public void deactivatePump() {
+				pumpRunning = false;
+			}
+
+			public void stopSystem() {
+				if(pumpRunning) {
+					deactivatePump();
+				}
+				
+				systemActive = false;
+			}
+
+			public void startSystem() {
+				systemActive = true;
+			}
+		}
+	}
+}

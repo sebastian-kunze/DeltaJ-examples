@@ -1,0 +1,31 @@
+delta dHighWater {
+	modifies se.hh.ceres.MinePump {
+
+		adds boolean isHighWaterLevel() {
+			if (environment.isHighWaterSensorDry()) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		modifies processEnvironment() {
+			if(pumpRunning && isHighWaterLevel()) {
+				activatePump();
+				original();
+			} else {
+				original();
+			}
+		}
+	}
+
+	modifies se.hh.ceres.Environment {
+		adds public boolean isHighWaterSensorDry() {
+			if (waterLevel != WATER_LEVEL_HIGH) {
+				return true;	
+			} else {
+				return false;
+			}
+		}
+	}
+}

@@ -1,0 +1,54 @@
+delta dEnvironment {
+	adds {
+		package se.hh.ceres;
+
+		public class Environment {
+
+			public final int WATER_LEVEL_LOW = 0;
+			
+			public final int WATER_LEVEL_NORMAL = 1;
+			
+			public final int WATER_LEVEL_HIGH = 2;
+
+			public int waterLevel = WATER_LEVEL_NORMAL;
+
+			public boolean methaneLevelCritical = false;
+
+			public Environment() {
+				
+			}
+
+			public int getWaterLevel() {
+				return waterLevel;
+			}
+			
+			public void setWaterLevel(int waterLevel) {
+				this.waterLevel = waterLevel;
+			}
+
+			public boolean isMethaneLevelCritical() {
+				return methaneLevelCritical;
+			}
+			
+			public void setMethaneLevelcritical(boolean methaneLevelCritical) {
+				this.methaneLevelCritical = methaneLevelCritical;
+			}
+
+			public void lowerWaterLevel() {
+				if (waterLevel == WATER_LEVEL_HIGH) {
+					waterLevel = WATER_LEVEL_NORMAL;
+				} else if (waterLevel == WATER_LEVEL_NORMAL) {
+					waterLevel = WATER_LEVEL_LOW;
+				}
+			}
+
+			public void raiseWaterLevel() {
+				if (waterLevel == WATER_LEVEL_LOW) {
+					waterLevel = WATER_LEVEL_NORMAL;
+				} else if (waterLevel == WATER_LEVEL_NORMAL) {
+					waterLevel = WATER_LEVEL_HIGH;
+				}
+			}
+		}
+	}
+}

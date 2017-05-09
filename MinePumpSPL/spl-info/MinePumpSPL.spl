@@ -1,0 +1,38 @@
+SPL MinePumpSPL {
+
+	Features = {Core, HighWater, LowWater, Methane}
+
+	Deltas = {dEnvironment, dHighWater, dLowWater, dMethane, dMinePump}
+
+	Constraints {
+		// Put boolean expression representation of the feature model here. 
+	}
+
+	Partitions {
+		{dEnvironment, dMinePump} when (Core);
+		
+		{dHighWater} when (HighWater);
+		
+		{dLowWater} when (LowWater);
+		
+		{dMethane} when (Methane);
+	}
+
+	Products {
+		Core = {Core};
+		
+		CoreHighWater = {Core, HighWater};
+		
+		CoreLowWater = {Core, LowWater};
+		
+		CoreMethane = {Core, Methane};
+		
+		CoreHighWaterLowWater = {Core, HighWater, LowWater};
+		
+		CoreHighWaterMethane = {Core, HighWater, Methane};
+		
+		CoreLowWaterMethane = {Core, LowWater, Methane};
+		
+		CoreLowWaterHighWaterMethane = {Core, LowWater, HighWater, Methane};
+	}
+}
