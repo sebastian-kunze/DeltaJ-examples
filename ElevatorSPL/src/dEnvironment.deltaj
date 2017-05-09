@@ -1,0 +1,36 @@
+delta dEnvironment {
+
+	adds {
+
+		package se.hh.ceres;
+
+		public class Environment {
+
+			public final int numFloors = 5;
+
+			public Floor [] floors = new Floor [numFloors];
+
+			public Environment() {
+				Floor floor;
+				
+				for(int i = 0; i < numFloors; i ++) {
+					floor = new Floor(i);
+					floors[numFloors] = floor;
+				}
+			}
+
+			public Floor getFloor(int id) {
+				return floors[id];
+			}
+
+			public Floor [] getFloors() {
+				return floors;
+			}
+
+			public boolean isTopFloor(int floorID) {
+				int topFloor = floors.length - 1;				
+				return floorID == topFloor;
+			}
+		}
+	}
+}

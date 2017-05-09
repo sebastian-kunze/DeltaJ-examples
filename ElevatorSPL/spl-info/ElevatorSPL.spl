@@ -1,0 +1,71 @@
+SPL ElevatorSPL {
+
+	Features = {Core, Empty, ExecutiveFloor, Overloaded, TwoThirdsFull, Weight}
+
+	Deltas = {dElevator, dEmpty, dEnvironment, dExecutiveFloor, dFloor, dOverloaded, dPerson, dTwoThirdsFull, dWeight}
+
+	Constraints {
+		// Put boolean expression representation of the feature model here. 
+	}
+
+	Partitions {
+		{dElevator, dEnvironment, dFloor, dPerson} when (Core);
+
+		// apply Weight before Empty.
+		{dWeight} when (Weight);
+ 
+		{dEmpty} when (Empty);
+
+		// apply TwoThirdsFull before ExecutiveFloor.
+		{dTwoThirdsFull} when (TwoThirdsFull);
+		
+		{dExecutiveFloor} when (ExecutiveFloor);
+
+		{dOverloaded} when (Overloaded);
+	}
+
+	Products {
+		
+		// variant representing the core behaviour.
+
+		Core = {Core};
+
+		// variant comprising of feature.
+
+		CoreEmpty = {Core, Empty};
+
+		CoreTwoThirdsFull = {Core, Weight, TwoThirdsFull};
+
+		CoreExecutiveFloor = {Core, ExecutiveFloor};
+
+		CoreOverloaded = {Core, Weight, Overloaded};		
+		
+		// variants comprising of two feature.
+		
+		CoreEmptyTwoThirdsFull = {Core, Empty, Weight, TwoThirdsFull};
+		
+		CoreEmptyExecutiveFloor = {Core, Empty, ExecutiveFloor};
+		
+		CoreEmptyOverloaded = {Core, Empty, Weight, Overloaded};
+		
+		CoreTwoThirdsFullExecutiveFloor = {Core, Weight, TwoThirdsFull, ExecutiveFloor};
+		
+		CoreTwoThirdsFullOverloaded = {Core, Weight, TwoThirdsFull};
+		
+		CoreExecutiveFloorOverloaded = {Core, ExecutiveFloor, Weight, Overloaded};
+		
+		// variants comprising of three features.
+		
+		CoreEmptyTwoThirdsFullExecutiveFloor = {Core, Empty, Weight, TwoThirdsFull, ExecutiveFloor};
+		
+		CoreEmptyTwoThirdsFullOverloaded = {Core, Empty, Weight, TwoThirdsFull, Overloaded};
+		
+		CoreEmptyExecutiveFloorOverloaded = {Core, Empty, ExecutiveFloor, Weight, Overloaded};
+		
+		CoreTwoThirdsFullExecutiveFloorOverloaded = {Core, Weight, TwoThirdsFull, ExecutiveFloor, Overloaded};
+		
+		// variants comprising of four features.
+		
+		CoreEmptyTwoThirdsFullExecutiveFloorOverloaded = {Core, Empty, Weight, TwoThirdsFull, ExecutiveFloor, Overloaded};
+	}
+}

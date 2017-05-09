@@ -1,0 +1,57 @@
+delta dFloor {
+	
+	adds {
+		
+		package se.hh.ceres;
+
+		public class Floor {
+
+			public int floorID;
+
+			public boolean elevatorCall = false;
+
+			public Person [] waiting = new Person[5];
+
+			public Floor(int floorID) {
+				this.floorID = floorID;
+			}
+
+			public int getFloorID() {
+				return floorID;
+			}
+
+			public void callElevator() {
+				elevatorCall = true;
+			}
+
+			public void reset() {
+				elevatorCall = false;
+			}
+
+			public boolean hasCall() {
+				return elevatorCall; 
+			}
+
+			public void processWaitingPersons(Elevator elevator) {
+				for (int i = 0; i < waiting.length; i++) {
+					Person person = waiting[i];
+					waiting[i] = null;
+					elevator.enterElevator(person);
+				}
+				
+				reset();
+			}
+
+			public void addWaitingPerson(Person person) {
+				for (int i = 0; i < waiting.length; i++) {
+					if (waiting[i] == null) {
+						waiting[i] = person;
+						break;
+					}
+				}
+				
+				callElevator();
+			}
+		}
+	}
+}

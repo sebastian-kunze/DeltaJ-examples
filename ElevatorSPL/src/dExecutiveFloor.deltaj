@@ -1,0 +1,45 @@
+delta dExecutiveFloor {	
+	
+	modifies se.hh.ceres.Elevator {
+		
+		adds public int executiveFloor = 4;
+
+		adds public boolean isExecutiveFloor(int floorID) {			
+			return floorID == executiveFloor;
+		}
+
+		adds public boolean isExecutiveFloorCalling() {
+			Floor floors [] = environment.getFloors();
+			
+			for (int i = 0; i < floors.length; i++) {
+				Floor floor = floors[i];
+				
+				if(floor.getFloorID() == executiveFloor && floor.hasCall()) {
+					return true;
+				}
+			}	
+			return false;
+		}
+
+		modifies stopRequestedInDirection(boolean headingUp, boolean respectFloorCalls, boolean respectInLiftCalls) {
+			boolean stopRequestedInDirection;
+			
+			if(isExecutiveFloorCalling()) {
+				boolean isStopRequestInDirection = currentFloorID < executiveFloor;
+				boolean isHeadingUp = headingUp == this.headingUp;
+				stopRequestedInDirection = isStopRequestInDirection == isHeadingUp;
+			} else {
+				stopRequestedInDirection = original(headingUp, respectFloorCalls, respectInLiftCalls);
+			}
+			return stopRequestedInDirection;
+		}
+
+		modifies stopRequestedAtCurrentFloor() {			
+			if(isExecutiveFloorCalling() && !isExecutiveFloor(currentFloorID)) {
+				return false;
+			} else {
+				return original();
+			}
+		}
+	}
+}

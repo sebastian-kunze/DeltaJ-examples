@@ -1,0 +1,218 @@
+delta dElevator {
+	adds {
+		package se.hh.ceres;
+
+		public class Elevator {
+
+			public int currentFloorID = 0;
+			
+			public boolean headingUp = true;
+
+			public boolean doorsOpen = false;
+
+			public Environment environment;
+
+			public Person [] persons = new Person [5];
+
+			public boolean [] floorButtons = new boolean [5];
+
+			public Elevator(Environment environment) {		
+				this.environment = environment;
+			}
+			
+			public int getCurrentFloorID() {
+				return currentFloorID;
+			}
+			
+			public void setCurrentFloorID(int currentFloorID) {
+				this.currentFloorID = currentFloorID;
+			}
+
+			public boolean isBlocked() {
+				return false;
+			}
+
+			public void enterElevator(Person person) {				
+				for (int i = 0; i < persons.length; i++) {
+					if (persons[i] == null) {
+						persons[i] = person;		
+						break;
+					}
+				}
+				person.enterElevator(this);
+			}
+
+			public boolean leaveElevator(Person person) {
+				for (int i = 0; i < persons.length; i++) {
+					if (this.persons[i] == person) {						
+						this.persons[i] = null;
+						return true;
+					}
+				}
+				return false;
+			}
+
+			public void pressInLiftFloorButton(int floorID) {
+				floorButtons[floorID] = true;
+			}
+
+			private void resetFloorButton(int floorID) {
+				floorButtons[floorID] = false;
+			}
+
+			public boolean areDoorsOpen() {
+				return doorsOpen;
+			}
+
+			public void timeShift() {	
+				if(stopRequestedAtCurrentFloor()) {	
+					doorsOpen = true;
+					
+					for (int i = 0; i < persons.length; i++) {	
+						Person person = persons[i];
+						
+						if(person.getDestination() == currentFloorID) {
+							leaveElevator(person);
+						}
+					}
+					
+					Floor floor = environment.getFloor(currentFloorID);		
+					floor.processWaitingPersons(this);
+					resetFloorButton(currentFloorID);
+					
+				} else {
+					if(doorsOpen) {
+						doorsOpen = !doorsOpen;
+					}
+										
+					if(stopRequestedInDirection(headingUp, true, true)) {
+						continueInDirection(headingUp);
+					} else {
+						if(stopRequestedInDirection(!headingUp, true, true)) {
+							continueInDirection(!headingUp);
+						} else {
+							continueInDirection(headingUp);
+						}
+					}
+				}
+			}
+
+			private boolean stopRequestedAtCurrentFloor() {
+				Floor floor = environment.getFloor(currentFloorID);
+								
+				return floor.hasCall() || floorButtons[currentFloorID];
+			}
+
+			private void continueInDirection(boolean headingUp) {
+				this.headingUp = headingUp;
+				
+				if(headingUp) {
+					if(environment.isTopFloor(currentFloorID)) {
+						headingUp = !headingUp;
+					}
+				} else {
+					if(currentFloorID == 0) {
+						headingUp = !headingUp;
+					}
+				}
+				
+				if(headingUp) {
+					currentFloorID = currentFloorID + 1;
+				} else {
+					currentFloorID = currentFloorID - 1;
+				}
+			}
+
+			private boolean stopRequestedInDirection(boolean headingUp, boolean respectFloorCalls, boolean respectInLiftCalls) {
+				boolean isFloorButtonPressed;
+				boolean stopRequestInDirection;
+				
+				Floor floor;
+				Floor [] floors = new Floor [5];
+				floors = environment.getFloors();
+				
+				if(headingUp) {
+					boolean isTopFloor = environment.isTopFloor(currentFloorID);
+					
+					if(isTopFloor) { 
+						stopRequestInDirection = false;
+					} else {
+						for (int i = currentFloorID + 1; i < floors.length; i ++) {
+							floor = floors[i];
+							
+							if(respectFloorCalls && floor.hasCall()){
+								stopRequestInDirection = true;
+							} else {
+								isFloorButtonPressed = floorButtons[i];
+								
+								if(respectInLiftCalls && isFloorButtonPressed) {
+									stopRequestInDirection = true;
+								}
+							}
+						}
+						
+						stopRequestInDirection = false;
+					}
+				} else {
+					if(currentFloorID == 0) {
+						stopRequestInDirection = false;	
+					} else {
+						for(int j = this.currentFloorID - 1; j >= 0; j--) {
+							floor = floors[j];
+							
+							if(respectFloorCalls && floor.hasCall()) {
+								stopRequestInDirection = true;
+							} else {
+								isFloorButtonPressed = floorButtons[j];
+								
+								if(respectInLiftCalls && isFloorButtonPressed) {
+									stopRequestInDirection = true;
+								}
+							
+							}
+						}
+					}	
+					stopRequestInDirection = false;
+				}
+				return stopRequestInDirection;
+			}
+
+			private boolean anyStopRequested() {
+				Floor [] floors = environment.getFloors();
+				
+				for(int i = 0; i < floors.length; i++) {
+					Floor floor = floors[i];
+					if(floor.hasCall() || floorButtons[i]) {
+						return true;
+					}
+				}
+				return false;
+			}
+
+			public boolean buttonForFloorIsPressed(int floorID) {
+				return floorButtons[floorID];
+			}
+
+			public boolean getCurrentDirection() {
+				return headingUp;
+			}
+
+			public Environment getEnvironment() {
+				return environment;
+			}
+
+			public boolean isEmpty() {
+				for (int i = 0; i < persons.length; i++) {
+					if (persons[i] != null) {
+						return false;
+					}
+				}
+				return true;
+			}
+
+			public boolean isIdle() {
+				return !anyStopRequested();
+			}
+		}
+	}
+}

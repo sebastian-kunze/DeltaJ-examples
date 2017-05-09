@@ -1,0 +1,20 @@
+delta dOverloaded {
+	
+	modifies se.hh.ceres.Elevator {
+		
+		adds public boolean blocked = false;
+		
+		modifies isBlocked() {	
+			return blocked;
+		}
+
+		modifies timeShift() {				
+			if(areDoorsOpen() && weight > maximumWeight) {
+				blocked = true;
+			} else {
+				blocked = false;
+				original();
+			}
+		}
+	}
+}

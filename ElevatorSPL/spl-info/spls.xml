@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../bin/spls.xsd">
+	<spl name="ElevatorSPL">
+		<features>
+			<feature name ="Core" />
+			<feature name ="Empty" />
+			<feature name ="ExecutiveFloor" />
+			<feature name ="Overloaded" />
+			<feature name ="TwoThirdsFull" />
+			<feature name ="Weight" />
+		</features>
+		<configurations>
+		</configurations>
+		<deltas>
+			<partition>
+				<modul delta="dElevator" when="Core" />
+				<modul delta="dEnvironment" when="Core" />
+				<modul delta="dFloor" when="Core" />
+				<modul delta="dPerson" when="Core" />
+			</partition>
+			<partition>
+				<modul delta="dWeight" when="Weight" />
+			</partition>
+			<partition>
+				<modul delta="dEmpty" when="Empty" />
+			</partition>
+			<partition>
+				<modul delta="dTwoThirdsFull" when="TwoThirdsFull" />
+			</partition>
+			<partition>
+				<modul delta="dExecutiveFloor" when="ExecutiveFloor" />
+			</partition>
+			<partition>
+				<modul delta="dOverloaded" when="Overloaded" />
+			</partition>
+		</deltas>
+	</spl>
+</spls>

@@ -1,0 +1,14 @@
+# ignore java class path 
+**.classpath
+
+# 
+**.project
+
+#
+**.settings
+
+# ignore generated sources
+**/src-gen
+
+
+**/bin

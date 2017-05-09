@@ -1,0 +1,32 @@
+delta dTwoThirdsFull {
+	
+	modifies se.hh.ceres.Elevator {
+	
+		adds private boolean isAnyLiftButtonPressed() {
+			for(int i = 0; i < floorButtons.length; i++) {
+				if(floorButtons[i]) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		modifies stopRequestedInDirection(boolean bHeadingUp, boolean bRespectFloorCalls, boolean bRespectInLiftCalls) {
+			boolean stopRequestedInDirection;
+			
+			if(weight > thresholdWeight && isAnyLiftButtonPressed()) {
+				return original(headingUp, false, respectInLiftCalls);
+			} else {
+				return original(headingUp, respectFloorCalls, respectInLiftCalls);
+			}
+		}
+
+		modifies stopRequestedAtCurrentFloor() {			
+			if(weight > thresholdWeight) {
+				return floorButtons[currentFloorID];
+			} else {
+				return original();
+			}
+		}
+	}
+}

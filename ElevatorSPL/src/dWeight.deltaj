@@ -1,0 +1,24 @@
+delta dWeight {
+	
+	modifies se.hh.ceres.Elevator {
+
+		adds public int weight;
+
+		adds public final int maximumWeight = 300;
+
+		adds public final int thresholdWeight = 200;
+
+		modifies enterElevator(Person person) {
+			original(person);
+			weight += person.getWeight();
+		}
+
+		modifies leaveElevator(Person person) {
+			if(original(person)) {
+				weight -= person.getWeight();	
+				return true;
+			}
+			return false;
+		}
+	}
+}
